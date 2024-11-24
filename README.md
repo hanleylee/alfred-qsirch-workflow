@@ -6,6 +6,8 @@
 
 This Alfred Workflow aims to search all content in your QNAP via Qsirch API.
 
+![himg](resource/home.png)
+
 ## Installation
 
 1. Go to [Releases](https://github.com/hanleylee/alfred-qsirch-workflow/releases) page to download the latest release file named *Qsirch.alfredworkflow*.
@@ -25,13 +27,21 @@ This Alfred Workflow aims to search all content in your QNAP via Qsirch API.
 
 ![searching](resource/searching.gif)
 
+### Use Alfred Modifier over the result item
+
+- `↩`: Copy file path to clipboard
+- `⌘ + ↩`: Reveal file in Finder
+- `⌃ + ↩`: Open file in FileStation
+- `⌥ + ↩`: Download file
+- `⇧`: Preview file in without exit Alfred
+
 ## Development
 
 Open `Package.swift` with Xcode. All settings should be work well.
 
 ## TODO
 
-- [ ] Support various icon on the left side of each result item.
+- [x] Support various icon on the left side of each result item.
 
 ## Ref
 
@@ -47,3 +57,4 @@ Copyright 2021 HanleyLee
 ---
 
 Welcome, if you have any bugs, I hope to raise issues. If it is useful to you, please mark a star ⭐️
+
