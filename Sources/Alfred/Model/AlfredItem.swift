@@ -7,12 +7,13 @@
 
 struct AlfredItem: Codable {
     struct Icon: Codable {
+        var type: String? = nil
         let path: String
     }
     let title: String
     let subtitle: String
     let arg: String
-    let icon: Icon
+    var icon: Icon? = nil
     var mods: AlfredModifiers? = nil
     var quicklookurl: String? = nil
     

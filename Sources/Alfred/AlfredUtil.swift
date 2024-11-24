@@ -67,7 +67,8 @@ struct AlfredUtil {
                 title: title,
                 subtitle: pathInMac,
                 arg: pathInMac,
-                icon: .init(path: iconUrl),
+//                icon: .init(path: iconUrl),
+                icon: .init(type: "fileicon", path: pathInMac),
                 mods: alfredModifiers,
                 quicklookurl: pathInMac
             )
