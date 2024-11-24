@@ -26,6 +26,7 @@ struct SearchResult: Codable, @unchecked Sendable {
         }
 
         let owner: String
+        /// without extension
         let name: String
         let id: String
         let title: String
@@ -34,6 +35,9 @@ struct SearchResult: Codable, @unchecked Sendable {
         let type: String
         let size: Int
         let actions: Actions
+        /// dir path of file
+        let path: String
+        var `extension`: String?
     }
 
     let total: Int

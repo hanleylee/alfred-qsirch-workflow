@@ -29,7 +29,7 @@ actor QsirchNetwork {
             "account": username,
             "password": password,
         ]
-        if let url = assembleURL("/qsirch/latest/api/login/"),
+        if let url = CommonTools.assembleURL("/qsirch/latest/api/login/", domain: self.domain),
            let response: LoginResult = try await request(url, body: body, method: "POST", requireSession: false)
         {
             let sid = response.qqs_sid
@@ -97,28 +97,5 @@ actor QsirchNetwork {
         } catch {
             throw error
         }
-    }
-}
-
-// MARK: - UTILS
-
-extension QsirchNetwork {
-    /// Assemble URL
-    /// - Parameters:
-    ///   - path: path
-    ///   - params: parameters will be encoded to the url
-    /// - Returns: the full url which consistent with domain, path and parameters
-    func assembleURL(_ path: String, domain: String? = nil, params: [String: Any] = [:]) -> String? {
-        guard var urlComponents = URLComponents(string: (domain ?? self.domain) + path) else {
-            return nil // 如果 baseURL 无效，返回 nil
-        }
-
-        // 将 params 转换为 URLQueryItem 列表
-        urlComponents.queryItems = params.map { key, value in
-            URLQueryItem(name: key, value: "\(value)")
-        }
-
-        // 返回拼接好的 URL 字符串
-        return urlComponents.url?.absoluteString
     }
 }

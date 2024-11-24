@@ -34,7 +34,7 @@ extension Qsirch {
             "limit": limit,
             "q": query
         ]
-        guard let url = await network.assembleURL("/qsirch/latest/api/search", params: params) else { return nil }
+        guard let url = CommonTools.assembleURL("/qsirch/latest/api/search", domain: self.domain, params: params) else { return nil }
         
         do {
             let result: SearchResult? = try await self.network.request(url)

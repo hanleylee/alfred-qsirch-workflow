@@ -53,7 +53,7 @@ extension SearchCommand {
         var password: String = ProcessInfo.processInfo.environment["ALFRED_QNAP_PASSWORD"] ?? ""
 
         @Option(help: ArgumentHelp("the max count of result", valueName: "number"))
-        var limit: Int = 50
+        var limit: Int = 100
 
         @Argument(help: "query content")
         var name: String = "example"

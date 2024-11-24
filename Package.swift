@@ -16,7 +16,14 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .executableTarget(
             name: "alfred-qsirch",
-            dependencies: [.product(name: "ArgumentParser", package: "swift-argument-parser")]
+            dependencies: [.product(name: "ArgumentParser", package: "swift-argument-parser")],
+            path: "Sources"
+        ),
+        .testTarget(
+            name: "alfred-qsirch-Tests",
+            dependencies: ["alfred-qsirch"],
+            path: "Tests"
+            
         ),
         
     ]

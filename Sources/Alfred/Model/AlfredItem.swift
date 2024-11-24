@@ -13,5 +13,9 @@ struct AlfredItem: Codable {
     let subtitle: String
     let arg: String
     let icon: Icon
+    var mods: AlfredModifiers? = nil
+    var quicklookurl: String? = nil
+    
+    
 //    var quicklookurl: String = ""
 }

@@ -41,12 +41,37 @@ struct AlfredUtil {
         var alfredItems: [AlfredItem] = []
 
         for item in result.items {
-            //            let title = item.title
             let title = item.title
-            guard let path = item.preview?.info.first(where: { $0.key == "path" })?.value.value as? String else { continue }
-            let pathInMac = "/Volumes/\(path)"
+            let dirPath = item.path
+            let fileName = item.name
+            let fileExtension = item.extension ?? ""
+            guard let filePath = item.preview?.info.first(where: { $0.key == "path" })?.value.value as? String else { continue }
+            let pathInMac = "/Volumes/\(filePath)"
             let iconUrl = domain + item.actions.icon
-            alfredItems.append(AlfredItem(title: title, subtitle: pathInMac, arg: pathInMac, icon: .init(path: iconUrl)))
+            
+            let fileStationUrl = CommonTools.assembleURL(
+                "/filestation/",
+                domain: domain,
+                params: ["path": dirPath, "file": fileExtension.isEmpty ? fileName : "\(fileName).\(fileExtension)"]
+            )
+            let downloadUrl = CommonTools.assembleURL(item.actions.download, domain: domain)
+            
+            let alfredModifiers = AlfredModifiers(
+                cmd: AlfredMod(valid: true, arg: pathInMac, subtitle: "Reveal in Finder"),
+                alt: AlfredMod(valid: true, arg: downloadUrl ?? "", subtitle: "Download file"),
+                ctrl: AlfredMod(valid: true, arg: fileStationUrl ?? "", subtitle: "Open file in FileStation")
+//                shift: AlfredMod(valid: true, arg: pathInMac, subtitle: "Preview")
+            )
+
+            let alfredItem = AlfredItem(
+                title: title,
+                subtitle: pathInMac,
+                arg: pathInMac,
+                icon: .init(path: iconUrl),
+                mods: alfredModifiers,
+                quicklookurl: pathInMac
+            )
+            alfredItems.append(alfredItem)
         }
 //        if ext == "eml", let from = metadata["from"], let subject = metadata["subject"], let sentDate = metadata["sent_date"] {
 //            title = "\(sentDate.split(separator: " ")[0]) \(subject): \(from)"
