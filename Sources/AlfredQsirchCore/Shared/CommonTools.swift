@@ -7,7 +7,8 @@
 
 import Foundation
 
-enum CommonTools {
+struct CommonTools {
+    static var sharedUserDefaults: UserDefaults = .standard
     /// Assemble URL
     /// - Parameters:
     ///   - path: path

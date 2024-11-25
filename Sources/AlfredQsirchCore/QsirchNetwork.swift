@@ -11,8 +11,8 @@ import SwiftUI
 // MARK: - Network
 
 actor QsirchNetwork {
-    @AppStorage("QNAP_API_SESSION_ID")
-    private var session: String = ""
+    @AppStorage("QNAP_API_SESSION_ID", store: CommonTools.sharedUserDefaults)
+    var session: String = ""
 
     private let domain: String
     private let username: String

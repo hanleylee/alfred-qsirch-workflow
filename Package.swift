@@ -34,12 +34,15 @@ let package = Package(
             ],
             path: "Sources/AlfredQsirchCore"
         ),
-        .testTarget(
-            name: "AlfredQsirchCLITests",
-            dependencies: ["AlfredQsirchCLI"],
-            path: "Tests/AlfredQsirchCLITests"
 
+        // MARK: - TEST -
+        .testTarget(
+            name: "AlfredQsirchTests",
+            dependencies: [
+                "AlfredQsirchCore",
+            ],
+            path: "Tests/AlfredQsirchTests"
         ),
-        
+
     ]
 )

@@ -8,10 +8,10 @@
 import XCTest
 import class Foundation.Bundle
 
-final class SearchCommandTests: XCTestCase {
+final class SearchCommandTests: QsirchBaseTests {
     func testSearchCommandOutput() throws {
         // 获取构建的可执行文件路径
-        let fooBinary = productsDirectory.appendingPathComponent("alfred-qsirch-workflow")
+        let fooBinary = productsDirectory.appendingPathComponent("alfred-qsirch")
 
         // 创建进程来运行可执行文件
         let process = Process()
