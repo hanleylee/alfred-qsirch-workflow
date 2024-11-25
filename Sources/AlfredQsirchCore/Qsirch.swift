@@ -7,13 +7,13 @@
 
 import Foundation
 
-actor Qsirch {
+public actor Qsirch {
     private let domain: String
     private let username: String
     private let password: String
     private let network: QsirchNetwork
     
-    init(domain: String, username: String, password: String) {
+    public init(domain: String, username: String, password: String) {
         self.domain = domain
         self.network = QsirchNetwork(domain: domain, username: username, password: password)
         
@@ -26,7 +26,7 @@ actor Qsirch {
 // MARK: - Biz
 
 extension Qsirch {
-    func search(query: String, limit: Int) async throws -> SearchResult? {
+    public func search(query: String, limit: Int) async throws -> SearchResult? {
 //        let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? query
         let params: [String: Any] = [
 //            "sort_by": "created",

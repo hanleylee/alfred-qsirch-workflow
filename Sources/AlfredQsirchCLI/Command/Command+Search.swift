@@ -7,6 +7,7 @@
 
 import ArgumentParser
 import Foundation
+import AlfredQsirchCore
 
 struct SearchCommand: AsyncParsableCommand {
     static let configuration = CommandConfiguration(commandName: "search", abstract: "Perform a search query on QNAP.", discussion: "")
@@ -22,13 +23,15 @@ struct SearchCommand: AsyncParsableCommand {
 
         do {
             guard let result = try await qsirch.search(query: options.name, limit: options.limit) else { return }
-            let alfedItems = await AlfredUtil.shared.searchResultToAlfredFileList(result: result, domain: options.domain)
-            let jsonData = try JSONEncoder().encode(alfedItems)
-            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                print(jsonString)
-            } else {
-                print("Failed to convert JSON data to string.")
-            }
+            let jsonString = result.convertToAlfredFileList(domain: options.domain)
+            print(jsonString)
+//            let alfedItems = await AlfredUtil.shared.searchResultToAlfredFileList(result: result, domain: options.domain)
+//            let jsonData = try JSONEncoder().encode(alfedItems)
+//            if let jsonString = String(data: jsonData, encoding: .utf8) {
+//                print(jsonString)
+//            } else {
+//                print("Failed to convert JSON data to string.")
+//            }
         } catch QsirchError.sessionExpired {
             print("Session expired. Please re-login.")
         } catch let QsirchError.networkError(message, code) {

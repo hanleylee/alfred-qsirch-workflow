@@ -1,6 +1,15 @@
 {
-  "originHash" : "71bfa4a431474c63d6d83281557857a7a49ddc26cf2f7ea192a53f5358e7161f",
+  "originHash" : "a888212d0c58293e284192d970d997da68848eb562b10fe4be6e973bdc910304",
   "pins" : [
+    {
+      "identity" : "alfredworkflowscriptfilter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hanleylee/AlfredWorkflowScriptFilter",
+      "state" : {
+        "revision" : "7560c50295d9b934d5a326df39feb16a7e464e68",
+        "version" : "1.0.0"
+      }
+    },
     {
       "identity" : "swift-argument-parser",
       "kind" : "remoteSourceControl",

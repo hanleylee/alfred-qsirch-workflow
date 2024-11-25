@@ -30,7 +30,7 @@ This Alfred Workflow aims to search all content in your QNAP via Qsirch API.
 ### Use Alfred Modifier over the result item
 
 - `↩`: Copy file path to clipboard
-- `⌘ + ↩`: Reveal file in Finder
+- `⌘ + ↩`: Reveal file in Finder(Mount your remote disk on your Mac at first.)
 - `⌃ + ↩`: Open file in FileStation
 - `⌥ + ↩`: Download file
 - `⇧`: Preview file in without exit Alfred
@@ -46,6 +46,8 @@ Open `Package.swift` with Xcode. All settings should be work well.
 ## Ref
 
 - [Instantly search your Qnap files and emails via Qsirch API](https://piszek.com/2023/03/19/qnap-qsirch-php-api-alfred/)
+- [Script Filter JSON Format](https://www.alfredapp.com/help/workflows/inputs/script-filter/json/)
+- [ALFRED WORKFLOW SCRIPTFILTER (ANOTHER ONE)](https://sleeplessmind.com.mo/news/alfred-workflow-scriptfilter-another-one/)
 
 ## License
 
