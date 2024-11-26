@@ -1,16 +1,15 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Hanley Lee on 2024/11/25.
 //
 
-import Foundation
 @testable import AlfredQsirchCore
+import Foundation
 import XCTest
 
 final class QsirchTests: QsirchBaseTests {
-
     override func setUp() {
         super.setUp()
     }
@@ -23,7 +22,8 @@ final class QsirchTests: QsirchBaseTests {
         guard
             let domain = ProcessInfo.processInfo.environment["ALFRED_QNAP_DOMAIN"],
             let username = ProcessInfo.processInfo.environment["ALFRED_QNAP_USERNAME"],
-            let password = ProcessInfo.processInfo.environment["ALFRED_QNAP_PASSWORD"] else {
+            let password = ProcessInfo.processInfo.environment["ALFRED_QNAP_PASSWORD"]
+        else {
             XCTFail("Missing required environment variables")
             return
         }

@@ -1,6 +1,15 @@
 {
-  "originHash" : "a888212d0c58293e284192d970d997da68848eb562b10fe4be6e973bdc910304",
+  "originHash" : "894d4629807b483912d4869b0a26ede1092c371dc8bc8b85d7c35e4720686a22",
   "pins" : [
+    {
+      "identity" : "alfred-workflow-updater",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hanleylee/alfred-workflow-updater",
+      "state" : {
+        "revision" : "80eda8e12eb701436cb346330d31e06f1098e084",
+        "version" : "0.0.1"
+      }
+    },
     {
       "identity" : "alfredworkflowscriptfilter",
       "kind" : "remoteSourceControl",

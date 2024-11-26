@@ -1,16 +1,15 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Hanley Lee on 2024/11/25.
 //
 
-import Foundation
 @testable import AlfredQsirchCore
+import Foundation
 import XCTest
 
 final class QsirchCommonToolsTests: QsirchBaseTests {
-
     override func setUp() {
         super.setUp()
     }
@@ -40,6 +39,7 @@ final class QsirchCommonToolsTests: QsirchBaseTests {
             "Generated URL (\(actualResult!)) is not in the list of expected results: \(possibleResults)"
         )
     }
+
     func testAssembleURLWithPathAndEncodedParams() {
         let domain = "http://example.com"
         let path = "/qsirch/latest/api/search?name=Hanley&country=cn"
@@ -50,7 +50,7 @@ final class QsirchCommonToolsTests: QsirchBaseTests {
     func testAssembleURLWithPathAndEmptyParams() {
         let domain = "http://example.com"
         let path = "/qsirch/latest/api/search?name=Hanley&country=cn"
-        let params: Dictionary<String, Any> = [:]
+        let params: [String: Any] = [:]
         let expectedResult = "http://example.com/qsirch/latest/api/search?"
 
         XCTAssertEqual(CommonTools.assembleURL(path, domain: domain, params: params), expectedResult)

@@ -6,40 +6,40 @@ import PackageDescription
 let package = Package(
     name: "alfred-qsirch-workflow",
     platforms: [
-        .macOS(.v12)
+        .macOS(.v13)
     ],
     products: [
-        .executable(
-            name: "alfred-qsirch",
-            targets: ["AlfredQsirchCLI"]
-        )
+        .executable(name: "alfred-qsirch", targets: ["AlfredQsirchCLI"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMajor(from: "1.5.0")),
         .package(url: "https://github.com/hanleylee/AlfredWorkflowScriptFilter", .upToNextMajor(from: "1.0.0")),
+//        .package(path: "/Users/hanley/repo/alfred-workflow-updater"),
+        .package(url: "https://github.com/hanleylee/alfred-workflow-updater", .upToNextMajor(from: "0.0.1")),
     ],
     targets: [
         .executableTarget(
             name: "AlfredQsirchCLI",
             dependencies: [
+                "QsirchCore",
+                "AlfredWorkflowScriptFilter",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                "AlfredQsirchCore",
             ],
             path: "Sources/AlfredQsirchCLI"
         ),
         .target(
-            name: "AlfredQsirchCore",
+            name: "QsirchCore",
             dependencies: [
-                "AlfredWorkflowScriptFilter",
+                .product(name: "AlfredWorkflowUpdater", package: "alfred-workflow-updater"),
             ],
-            path: "Sources/AlfredQsirchCore"
+            path: "Sources/QsirchCore"
         ),
 
         // MARK: - TEST -
         .testTarget(
             name: "AlfredQsirchTests",
             dependencies: [
-                "AlfredQsirchCore",
+                "QsirchCore",
             ],
             path: "Tests/AlfredQsirchTests"
         ),

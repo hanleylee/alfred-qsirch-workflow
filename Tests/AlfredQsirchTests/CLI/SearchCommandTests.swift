@@ -5,8 +5,8 @@
 //  Created by Hanley Lee on 2024/11/24.
 //
 
-import XCTest
 import class Foundation.Bundle
+import XCTest
 
 final class SearchCommandTests: QsirchBaseTests {
     func testSearchCommandOutput() throws {
@@ -24,7 +24,7 @@ final class SearchCommandTests: QsirchBaseTests {
         let pipe = Pipe()
         process.standardOutput = pipe
         process.standardError = pipe
-        
+
         process.environment = [
             "QNAP_API_SESSION_ID": "test-session-id",
             "ALFRED_QNAP_DOMAIN": "http://test-domain",

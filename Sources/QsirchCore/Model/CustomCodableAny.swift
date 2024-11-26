@@ -7,14 +7,14 @@
 
 import Foundation
 
-struct CustomCodableAny: Codable {
-    let value: Any
+public struct CustomCodableAny: Codable {
+    public let value: Any
 
     init(_ value: Any) {
         self.value = value
     }
 
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         if let intValue = try? container.decode(Int.self) {
             self.value = intValue
@@ -36,7 +36,7 @@ struct CustomCodableAny: Codable {
         }
     }
 
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         switch value {
         case let intValue as Int:

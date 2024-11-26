@@ -11,7 +11,7 @@ import SwiftUI
 // MARK: - Network
 
 actor QsirchNetwork {
-    @AppStorage("QNAP_API_SESSION_ID", store: CommonTools.sharedUserDefaults)
+    @AppStorage("QNAP_API_SESSION_ID", store: QsirchTools.sharedUserDefaults)
     var session: String = ""
 
     private let domain: String
@@ -29,7 +29,7 @@ actor QsirchNetwork {
             "account": username,
             "password": password,
         ]
-        if let url = CommonTools.assembleURL("/qsirch/latest/api/login/", domain: self.domain),
+        if let url = QsirchTools.assembleURL("/qsirch/latest/api/login/", domain: self.domain),
            let response: LoginResult = try await request(url, body: body, method: "POST", requireSession: false)
         {
             let sid = response.qqs_sid

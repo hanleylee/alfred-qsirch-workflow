@@ -5,33 +5,50 @@
 //  Created by Hanley Lee on 2024/11/23.
 //
 
+import AlfredWorkflowScriptFilter
+import AlfredWorkflowUpdaterCore
 import ArgumentParser
 import Foundation
-import AlfredQsirchCore
+import QsirchCore
 
 struct SearchCommand: AsyncParsableCommand {
     static let configuration = CommandConfiguration(commandName: "search", abstract: "Perform a search query on QNAP.", discussion: "")
-    @OptionGroup()
-    var options: Options
+    @Option(help: ArgumentHelp("The domain of QNAP"))
+    var domain: String = ProcessInfo.processInfo.environment["ALFRED_QNAP_DOMAIN"] ?? ""
+
+    @Option(help: ArgumentHelp("The domain of QNAP"))
+    var username: String = ProcessInfo.processInfo.environment["ALFRED_QNAP_USERNAME"] ?? ""
+
+    @Option(help: ArgumentHelp("The domain of QNAP"))
+    var password: String = ProcessInfo.processInfo.environment["ALFRED_QNAP_PASSWORD"] ?? ""
+
+    @Option(help: ArgumentHelp("the max count of result", valueName: "number"))
+    var limit: Int = 50
+
+    @Argument(help: "query content")
+    var name: String = "example"
 
     func run() async throws {
         let qsirch = Qsirch(
-            domain: options.domain,
-            username: options.username,
-            password: options.password
+            domain: domain,
+            username: username,
+            password: password
         )
 
         do {
-            guard let result = try await qsirch.search(query: options.name, limit: options.limit) else { return }
-            let jsonString = result.convertToAlfredFileList(domain: options.domain)
-            print(jsonString)
-//            let alfedItems = await AlfredUtil.shared.searchResultToAlfredFileList(result: result, domain: options.domain)
-//            let jsonData = try JSONEncoder().encode(alfedItems)
-//            if let jsonString = String(data: jsonData, encoding: .utf8) {
-//                print(jsonString)
-//            } else {
-//                print("Failed to convert JSON data to string.")
-//            }
+            guard let result = try await qsirch.search(query: name, limit: limit) else { return }
+            addQsirchToAlfredResult(model: result, domain: domain)
+            let updater = Updater(githubRepo: CommonTools.githubRepo, workflowAssetName: CommonTools.workflowAssetName)
+            if let release = try await updater.check(maxCacheAge: 1440), let currentVersion = AlfredUtils.currentVersion {
+                if currentVersion.compare(release.tagName, options: .numeric) == .orderedAscending {
+                    ScriptFilter.item(
+                        Item(title: "New version available on GitHub")
+                            .subtitle("current version: \(currentVersion), remote version: \(release.tagName)")
+                            .arg("update")
+                    )
+                }
+            }
+            print(ScriptFilter.output())
         } catch QsirchError.sessionExpired {
             print("Session expired. Please re-login.")
         } catch let QsirchError.networkError(message, code) {
@@ -43,22 +60,43 @@ struct SearchCommand: AsyncParsableCommand {
 }
 
 extension SearchCommand {
-    struct Options: ParsableArguments {
-//        @Flag(help: "Prints the available products and targets")
-//        var listProducts = false
-        @Option(help: ArgumentHelp("The domain of QNAP"))
-        var domain: String = ProcessInfo.processInfo.environment["ALFRED_QNAP_DOMAIN"] ?? ""
+    public func addQsirchToAlfredResult(model: SearchResult, domain: String) {
+        if model.items.isEmpty {
+            ScriptFilter.item(
+                AlfredWorkflowScriptFilter.Item(title: "No matched")
+                    .subtitle("There is no matched file in your QNAP: \(domain)")
+                    .arg("empty")
+            )
+        } else {
+            for item in model.items {
+                let title = item.title
+                let dirPath = item.path
+                let fileName = item.name
+                let fileExtension = item.extension ?? ""
+                guard let filePath = item.preview?.info.first(where: { $0.key == "path" })?.value.value as? String else { continue }
+                let pathInMac = "/Volumes/\(filePath)"
+                let iconUrl = domain + item.actions.icon
 
-        @Option(help: ArgumentHelp("The domain of QNAP"))
-        var username: String = ProcessInfo.processInfo.environment["ALFRED_QNAP_USERNAME"] ?? ""
+                let fileStationUrl = QsirchTools.assembleURL(
+                    "/filestation/",
+                    domain: domain,
+                    params: ["path": dirPath, "file": fileExtension.isEmpty ? fileName : "\(fileName).\(fileExtension)"]
+                )
+                let downloadUrl = QsirchTools.assembleURL(item.actions.download, domain: domain)
 
-        @Option(help: ArgumentHelp("The domain of QNAP"))
-        var password: String = ProcessInfo.processInfo.environment["ALFRED_QNAP_PASSWORD"] ?? ""
-
-        @Option(help: ArgumentHelp("the max count of result", valueName: "number"))
-        var limit: Int = 100
-
-        @Argument(help: "query content")
-        var name: String = "example"
+                ScriptFilter.add(
+                    AlfredWorkflowScriptFilter.Item(title: title)
+                        .subtitle(pathInMac)
+                        .arg(pathInMac)
+                        .icon(.init(path: pathInMac, type: .fileicon))
+                        .quicklookurl(pathInMac)
+                        .mods(
+                            Cmd().subtitle("Reveal file in Finder").arg(pathInMac),
+                            Alt().subtitle("Download file").arg(downloadUrl ?? ""),
+                            Ctrl().subtitle("Open file in FileStation").arg(fileStationUrl ?? "")
+                        )
+                )
+            }
+        }
     }
 }

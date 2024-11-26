@@ -7,14 +7,17 @@
 
 import Foundation
 
-struct CommonTools {
-    static var sharedUserDefaults: UserDefaults = .standard
+public struct QsirchTools {
+    private init() {}
+
+    public static var sharedUserDefaults: UserDefaults = .standard
+
     /// Assemble URL
     /// - Parameters:
     ///   - path: path
     ///   - params: parameters will be encoded to the url
     /// - Returns: the full url which consistent with domain, path and parameters
-    static func assembleURL(_ path: String, domain: String, params: [String: Any]? = nil) -> String? {
+    public static func assembleURL(_ path: String, domain: String, params: [String: Any]? = nil) -> String? {
         guard var urlComponents = URLComponents(string: domain + path) else {
             return nil // 如果 baseURL 无效，返回 nil
         }

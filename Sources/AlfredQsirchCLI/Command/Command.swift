@@ -6,15 +6,19 @@
 //
 
 import ArgumentParser
+
 struct Command: AsyncParsableCommand {
     @OptionGroup()
     var options: Options
-    
+
     static let configuration = CommandConfiguration(
         commandName: "alfred-qsirch",
         abstract: "Tool used for connecting alfred with Qsirch",
         discussion: "",
-        subcommands: [SearchCommand.self]
+        subcommands: [
+            SearchCommand.self,
+            UpdateCommand.self,
+        ]
     )
 
     func run() async throws {
