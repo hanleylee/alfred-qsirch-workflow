@@ -3,39 +3,47 @@
 
 import PackageDescription
 
+let isLocalDebug = true
+
+let dependency_AlfredWorkflowUtils: Package.Dependency = isLocalDebug ?
+    .package(path: "../alfred-workflow-utils") :
+    .package(url: "https://github.com/hanleylee/alfred-workflow-utils.git", .upToNextMajor(from: "0.0.1"))
+
 let package = Package(
     name: "alfred-qsirch-workflow",
     platforms: [
-        .macOS(.v13)
+        .macOS(.v13),
     ],
     products: [
         .executable(name: "alfred-qsirch", targets: ["AlfredQsirchCLI"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMajor(from: "1.5.0")),
-        .package(url: "https://github.com/hanleylee/AlfredWorkflowScriptFilter", .upToNextMajor(from: "1.0.0")),
-//        .package(path: "/Users/hanley/repo/alfred-workflow-updater"),
-        .package(url: "https://github.com/hanleylee/alfred-workflow-updater", .upToNextMajor(from: "0.0.1")),
+        dependency_AlfredWorkflowUtils,
     ],
     targets: [
         .executableTarget(
             name: "AlfredQsirchCLI",
             dependencies: [
                 "QsirchCore",
-                "AlfredWorkflowScriptFilter",
+                .product(name: "AlfredWorkflowUpdater", package: "alfred-workflow-utils"),
+                .product(name: "AlfredWorkflowScriptFilter", package: "alfred-workflow-utils"),
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
+//                .target(name: "ArgumentParser"),
             ],
             path: "Sources/AlfredQsirchCLI"
         ),
         .target(
             name: "QsirchCore",
             dependencies: [
-                .product(name: "AlfredWorkflowUpdater", package: "alfred-workflow-updater"),
+                .product(name: "AlfredWorkflowUpdater", package: "alfred-workflow-utils"),
+
             ],
             path: "Sources/QsirchCore"
         ),
 
         // MARK: - TEST -
+
         .testTarget(
             name: "AlfredQsirchTests",
             dependencies: [
@@ -43,6 +51,5 @@ let package = Package(
             ],
             path: "Tests/AlfredQsirchTests"
         ),
-
     ]
 )

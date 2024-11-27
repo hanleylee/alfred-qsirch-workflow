@@ -39,10 +39,10 @@ struct SearchCommand: AsyncParsableCommand {
             guard let result = try await qsirch.search(query: name, limit: limit) else { return }
             addQsirchToAlfredResult(model: result, domain: domain)
             let updater = Updater(githubRepo: CommonTools.githubRepo, workflowAssetName: CommonTools.workflowAssetName)
-            if let release = try await updater.check(maxCacheAge: 1440), let currentVersion = AlfredUtils.currentVersion {
+            if let release = try await updater.check(maxCacheAge: 1440), let currentVersion = AlfredConst.workflowVersion {
                 if currentVersion.compare(release.tagName, options: .numeric) == .orderedAscending {
                     ScriptFilter.item(
-                        Item(title: "New version available on GitHub")
+                        Item(title: "New version available on GitHub, type [Enter] to update")
                             .subtitle("current version: \(currentVersion), remote version: \(release.tagName)")
                             .arg("update")
                     )

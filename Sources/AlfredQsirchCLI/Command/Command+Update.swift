@@ -27,7 +27,7 @@ struct UpdateCommand: AsyncParsableCommand {
             if let release = try await updater.check(maxCacheAge: 0) {
                 ScriptFilter.item(
                     Item(title: "Latest version: \(release.tagName)")
-                        .subtitle("Current version is \(AlfredUtils.currentVersion ?? "None")")
+                        .subtitle("Current version is \(AlfredConst.workflowVersion ?? "None")")
                 )
             }
         case .open:

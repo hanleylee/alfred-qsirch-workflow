@@ -1,4 +1,4 @@
-# Alfred Timestamp Converter
+# Alfred Qsirch Workflow
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/hanleylee/alfred-qsirch-workflow)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/hanleylee/alfred-qsirch-workflow)
