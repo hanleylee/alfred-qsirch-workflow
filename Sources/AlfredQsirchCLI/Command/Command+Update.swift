@@ -1,14 +1,15 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Hanley Lee on 2024/11/26.
 //
 
-import Foundation
-import ArgumentParser
-import AlfredWorkflowUpdaterCore
+import AlfredCore
 import AlfredWorkflowScriptFilter
+import AlfredWorkflowUpdaterCore
+import ArgumentParser
+import Foundation
 
 struct UpdateCommand: AsyncParsableCommand {
     enum Action: String, ExpressibleByArgument {
@@ -41,6 +42,4 @@ struct UpdateCommand: AsyncParsableCommand {
 
     @Option(help: ArgumentHelp("Action used to update subcommand", valueName: "check|open|download|update"))
     var action: Action = .check
-
 }
-

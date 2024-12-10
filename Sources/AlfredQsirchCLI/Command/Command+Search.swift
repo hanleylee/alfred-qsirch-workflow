@@ -10,6 +10,7 @@ import AlfredWorkflowUpdaterCore
 import ArgumentParser
 import Foundation
 import QsirchCore
+import AlfredCore
 
 struct SearchCommand: AsyncParsableCommand {
     static let configuration = CommandConfiguration(commandName: "search", abstract: "Perform a search query on QNAP.", discussion: "")
@@ -39,15 +40,21 @@ struct SearchCommand: AsyncParsableCommand {
             guard let result = try await qsirch.search(query: name, limit: limit) else { return }
             addQsirchToAlfredResult(model: result, domain: domain)
             let updater = Updater(githubRepo: CommonTools.githubRepo, workflowAssetName: CommonTools.workflowAssetName)
-            if let release = try await updater.check(maxCacheAge: 1440), let currentVersion = AlfredConst.workflowVersion {
+
+            if let release = updater.latestReleaseInfo, let currentVersion = AlfredConst.workflowVersion {
                 if currentVersion.compare(release.tagName, options: .numeric) == .orderedAscending {
                     ScriptFilter.item(
                         Item(title: "New version available on GitHub, type [Enter] to update")
                             .subtitle("current version: \(currentVersion), remote version: \(release.tagName)")
                             .arg("update")
+                            .variable(.init(name: "HAS_UPDATE", value: "1"))
                     )
                 }
             }
+            Task {
+                try await updater.check(maxCacheAge: 1440)
+            }
+
             print(ScriptFilter.output())
         } catch QsirchError.sessionExpired {
             print("Session expired. Please re-login.")
