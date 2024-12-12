@@ -51,11 +51,11 @@ struct SearchCommand: AsyncParsableCommand {
                     )
                 }
             }
-            Task {
-                try await updater.check(maxCacheAge: 1440)
-            }
-
             print(ScriptFilter.output())
+
+            Task {
+                let _ = await updater.check(maxCacheAge: 1440)
+            }
         } catch QsirchError.sessionExpired {
             print("Session expired. Please re-login.")
         } catch let QsirchError.networkError(message, code) {
