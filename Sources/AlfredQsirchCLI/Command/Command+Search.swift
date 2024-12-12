@@ -53,9 +53,7 @@ struct SearchCommand: AsyncParsableCommand {
             }
             print(ScriptFilter.output())
 
-            Task {
-                let _ = await updater.check(maxCacheAge: 1440)
-            }
+            let _ = try await updater.check(maxCacheAge: 1440)
         } catch QsirchError.sessionExpired {
             print("Session expired. Please re-login.")
         } catch let QsirchError.networkError(message, code) {
@@ -93,7 +91,7 @@ extension SearchCommand {
 
                 ScriptFilter.add(
                     AlfredWorkflowScriptFilter.Item(title: title)
-                        .subtitle(pathInMac)
+                        .subtitle("\(pathInMac)     \(CommonTools.formatBytes(item.size))")
                         .arg(pathInMac)
                         .icon(.init(path: pathInMac, type: .fileicon))
                         .quicklookurl(pathInMac)
