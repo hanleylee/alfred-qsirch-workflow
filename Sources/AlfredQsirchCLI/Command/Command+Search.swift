@@ -5,12 +5,12 @@
 //  Created by Hanley Lee on 2024/11/23.
 //
 
+import AlfredCore
 import AlfredWorkflowScriptFilter
 import AlfredWorkflowUpdaterCore
 import ArgumentParser
 import Foundation
 import QsirchCore
-import AlfredCore
 
 struct SearchCommand: AsyncParsableCommand {
     static let configuration = CommandConfiguration(commandName: "search", abstract: "Perform a search query on QNAP.", discussion: "")
@@ -39,7 +39,7 @@ struct SearchCommand: AsyncParsableCommand {
         do {
             guard let result = try await qsirch.search(query: name, limit: limit) else { return }
             addQsirchToAlfredResult(model: result, domain: domain)
-            let updater = Updater(githubRepo: CommonTools.githubRepo, workflowAssetName: CommonTools.workflowAssetName)
+            let updater = Updater(githubRepo: CommonTools.githubRepo, workflowAssetName: CommonTools.workflowAssetName, checkInterval: 60*60*24)
 
             if let release = updater.latestReleaseInfo, let currentVersion = AlfredConst.workflowVersion {
                 if currentVersion.compare(release.tagName, options: .numeric) == .orderedAscending {
@@ -51,15 +51,19 @@ struct SearchCommand: AsyncParsableCommand {
                     )
                 }
             }
-            print(ScriptFilter.output())
+            AlfredUtils.output(ScriptFilter.output())
 
-            let _ = try await updater.check(maxCacheAge: 1440)
+            if !updater.cacheValid() {
+                AlfredUtils.log("cache invalid")
+                checkForUpdateSilently()
+            }
+
         } catch QsirchError.sessionExpired {
-            print("Session expired. Please re-login.")
+            AlfredUtils.log("Session expired. Please re-login.")
         } catch let QsirchError.networkError(message, code) {
-            print("Network error: \(message), code: \(code)")
+            AlfredUtils.log("Network error: \(message), code: \(code)")
         } catch {
-            print("Unexpected error: \(error)")
+            AlfredUtils.log("Unexpected error: \(error)")
         }
     }
 }
@@ -91,7 +95,7 @@ extension SearchCommand {
 
                 ScriptFilter.add(
                     AlfredWorkflowScriptFilter.Item(title: title)
-                        .subtitle("\(pathInMac)     \(CommonTools.formatBytes(item.size))")
+                        .subtitle(WorkflowUtils.alignedText(left: pathInMac, right: CommonTools.formatBytes(item.size), component: .subtitle))
                         .arg(pathInMac)
                         .icon(.init(path: pathInMac, type: .fileicon))
                         .quicklookurl(pathInMac)
@@ -102,6 +106,25 @@ extension SearchCommand {
                         )
                 )
             }
+        }
+    }
+
+    func checkForUpdateSilently() {
+        do {
+            let process = Process()
+            let executablePath = CommandLine.arguments[0]
+            // child process will exit if parent process exited, so we must use nohup to execute external command
+            process.executableURL = URL(fileURLWithPath: "/usr/bin/nohup")
+            process.arguments = [executablePath, "update", "--action", "check"]
+
+            process.standardOutput = FileHandle(forWritingAtPath: "/dev/null")
+            process.standardError = FileHandle(forWritingAtPath: "/dev/null")
+
+            try process.run()
+//            process.waitUntilExit()
+            AlfredUtils.log("Update check completed in the background")
+        } catch {
+            AlfredUtils.log("Failed to start update process: \(error)")
         }
     }
 }

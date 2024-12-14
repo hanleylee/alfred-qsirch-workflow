@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Hanley Lee on 2024/11/26.
 //
@@ -10,6 +10,8 @@ import Foundation
 struct CommonTools {
     static let githubRepo = "hanleylee/alfred-qsirch-workflow"
     static let workflowAssetName = "Qsirch.alfredworkflow"
+    
+    private init() {}
     
     /// 将字节大小格式化为易读的 KB, MB, GB, TB 格式
     /// - Parameters:

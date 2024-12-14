@@ -22,10 +22,10 @@ struct UpdateCommand: AsyncParsableCommand {
     static let configuration = CommandConfiguration(commandName: "update", abstract: "Update workflow", discussion: "")
 
     func run() async throws {
-        let updater = Updater(githubRepo: CommonTools.githubRepo, workflowAssetName: CommonTools.workflowAssetName)
+        let updater = Updater(githubRepo: CommonTools.githubRepo, workflowAssetName: CommonTools.workflowAssetName, checkInterval: 0)
         switch action {
         case .check:
-            if let release = try await updater.check(maxCacheAge: 0) {
+            if let release = try await updater.check() {
                 ScriptFilter.item(
                     Item(title: "Latest version: \(release.tagName)")
                         .subtitle("Current version is \(AlfredConst.workflowVersion ?? "None")")
