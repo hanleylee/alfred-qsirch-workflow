@@ -37,7 +37,15 @@ This Alfred Workflow aims to search all content in your QNAP via Qsirch API.
 
 ## Development
 
-Open `Package.swift` with Xcode. All settings should be work well.
+```bash
+# Build release binary
+cargo build --release
+
+# Run search (example query)
+cargo run --release -- search --domain <domain> --username <user> --password <pass> example
+```
+
+Binary output: `target/release/alfred-qsirch`. Use the same CLI as the Swift version: `search` and `update` subcommands, with env vars `ALFRED_QNAP_DOMAIN`, `ALFRED_QNAP_USERNAME`, `ALFRED_QNAP_PASSWORD` or `--domain`/`--username`/`--password`.
 
 ## TODO
 

@@ -1,16 +1,19 @@
 SHELL:=/usr/bin/env bash
-ALFRED_EUDIC_WORKFLOW="/Users/hanley/Library/Mobile Documents/com~apple~CloudDocs/ihanley/config/Alfred/Alfred.alfredpreferences/workflows/user.workflow.85F7045B-6A2B-4980-A929-A172079488B2"
+BINARY_NAME:=alfred-qsirch
 
-.PHONY: all build install run clean
-all: build run
+.PHONY: all build run clean
+all: build run clean
 
 build:
-	# swift build -c release --build-path ".build" --target alfred-qsirch
-	swift build -c release --build-path ".build"
-install:
-	@install -D -m 755 .build/release/alfred-qsirch $(ALFRED_EUDIC_WORKFLOW)/bin/alfred-qsirch
+	cargo build --release
+build-multi-arch:
+	cargo build --release --target aarch64-apple-darwin
+	cargo build --release --target x86_64-apple-darwin
+	lipo -create -output "target/release/$(BINARY_NAME)" "target/aarch64-apple-darwin/release/$(BINARY_NAME)" "target/x86_64-apple-darwin/release/$(BINARY_NAME)"
 run:
-	swift run --build-path .build alfred-qsirch search example
+	cargo run --release -- search example
+clean:
+	cargo clean
 a:
 	@echo "a is $$0"
 b:
